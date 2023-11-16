@@ -52,4 +52,5 @@ input {
 .myCheckbox:checked {
   background: url("assets/images/checked.png") no-repeat !important;
   display: inline-block;
+  border-width: 3px !important;
 }

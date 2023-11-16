@@ -219,21 +219,19 @@ export const Table = <T extends object>({
                                                   return (
                                                     <div
                                                       key={column.id}
-                                                      className="px-1"
+                                                      className="px-1 flex items-center gap-2"
                                                     >
-                                                      <label className="-mt-1">
-                                                        <input
-                                                          className="appearance-none mr-2 cursor-pointer w-[1rem] h-[1rem] p-[3px]  rounded-lg border-2 default:ring-2 ring-indigo-400 focus:none "
-                                                          {...{
-                                                            type: "checkbox",
-                                                            checked:
-                                                              column.getIsVisible(),
-                                                            onChange:
-                                                              column.getToggleVisibilityHandler(),
-                                                          }}
-                                                        />{" "}
-                                                        {slugToTitle(column.id)}
-                                                      </label>
+                                                      <input
+                                                        className="appearance-none myCheckbox cursor-pointer w-5 h-5 p-[3px] rounded-md border-2 default:ring-2 ring-indigo-400 focus:none"
+                                                        {...{
+                                                          type: "checkbox",
+                                                          checked:
+                                                            column.getIsVisible(),
+                                                          onChange:
+                                                            column.getToggleVisibilityHandler(),
+                                                        }}
+                                                      />{" "}
+                                                      {slugToTitle(column.id)}
                                                     </div>
                                                   );
                                                 })
@@ -313,7 +311,7 @@ export const Table = <T extends object>({
                                         <div className="py-2 flex flex-col  gap-2 text-sm text-gray-700 ">
                                           <div className="ml-2 flex gap-2  items-center">
                                             <input
-                                              className="appearance-none myCheckbox cursor-pointer  w-5 h-5 p-[3px] rounded-md border-2 default:ring-2 ring-indigo-400 checked:bg-indigo-500   focus:none"
+                                              className="appearance-none myCheckbox cursor-pointer w-5 h-5 p-[3px] rounded-md border-2 default:ring-2 ring-indigo-400 checked:bg-indigo-500   focus:none"
                                               {...{
                                                 type: "checkbox",
                                                 checked:
@@ -385,7 +383,6 @@ function IndeterminateCheckbox({
   ...rest
 }: { indeterminate?: boolean } & HTMLProps<HTMLInputElement>) {
   const ref = useRef<HTMLInputElement>(null!);
-
   useEffect(() => {
     if (typeof indeterminate === "boolean") {
       ref.current.indeterminate = !rest.checked && indeterminate;

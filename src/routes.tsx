@@ -35,7 +35,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/services",
-        element: <>Services</>,
+        element: <>Servieces</>,
       },
       {
         path: "/quotation",

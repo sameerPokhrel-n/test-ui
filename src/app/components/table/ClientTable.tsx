@@ -21,19 +21,22 @@ const StatusCell = (ctx: CellContext<any, any>) => {
 
 const NameCell = (ctx: CellContext<any, any>) => {
   const { name, email_address } = ctx.row.original;
-
   return (
-    <div className="flex gap-2 justify-start  place-items-center">
-      <img src={client1} className="h-7 w-7 rounded " />
-      <div className="flex flex-col items-start justify-start text-slate-700  gap-1 font-normal font-Inter leading-none">
-        <span>{name}</span>
-        <span>{email_address}</span>
-      </div>
-      {ctx.row.getIsSelected() && (
-        <div className="p-1 relative rounded-full   border-dotted border-2">
-          <IoIosAdd className="text-slate-400" />
+    <div className="flex justify-between items-center">
+      <div className="flex-1 flex  gap-2 justify-start  place-items-center">
+        <img src={client1} className="h-7 w-7 rounded " />
+        <div className="flex flex-col items-start justify-start text-slate-700  gap-1 font-normal font-Inter leading-none">
+          <span>{name}</span>
+          <span>{email_address}</span>
         </div>
-      )}
+      </div>
+      <div className="justify-self-start">
+        {ctx.row.getIsSelected() && (
+          <div className="p-1 relative rounded-full   border-dotted border-2">
+            <IoIosAdd className="text-slate-400" />
+          </div>
+        )}
+      </div>
     </div>
   );
 };

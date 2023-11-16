@@ -8,7 +8,7 @@ import { menuItems } from "@/app/data/menu";
 export const AppLayout = () => {
   const navigate = useNavigate();
   useEffect(() => {
-    navigate("/dashboard");
+    navigate("/dashboard", { replace: true });
   }, []);
 
   return (
