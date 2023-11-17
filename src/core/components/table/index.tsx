@@ -60,12 +60,12 @@ export const Table = <T extends object>({
   title = "",
   showFooter = true,
   sortable = true,
-  rowSelectableWithCheckbox = true,
+  rowSelectableWithCheckbox = false,
 }: ReactTableProps<T>) => {
   const tableRef = useRef();
   const [data, setData] = useState(() => [...rows]);
   const [columnVisibility, setColumnVisibility] = useState({});
-  const [rowSelection, setRowSelection] = useState({});
+  const [rowSelection, setRowSelection] = useState({ 0: true });
   const [isOpen, setIsOpen] = useState({ headerID: "", showDropWown: false });
   const [showHiddenColumn, setShowHiddenColumns] = useState(false);
 

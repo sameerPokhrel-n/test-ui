@@ -77,8 +77,6 @@ export const columns: ColumnDef<Client>[] = [
     accessorKey: "name",
     header: "Name",
     cell: NameCell,
-    // className: "freeze-data-right",
-    // headerClassName: "freeze-header-right !font-bold",
   },
   {
     accessorKey: "added_from",
@@ -142,6 +140,7 @@ export const ClientTable = () => {
         rows={clientInitialState}
         defaultColumns={columns}
         showFooter={true}
+        rowSelectableWithCheckbox={true}
       />
     </div>
   );
