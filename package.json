@@ -13,6 +13,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tanstack/match-sorter-utils": "^8.8.4",
     "@tanstack/react-table": "^8.10.7",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",

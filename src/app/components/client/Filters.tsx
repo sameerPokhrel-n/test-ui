@@ -10,7 +10,7 @@ import {
 export const Filters = () => {
   return (
     <>
-      <div className="h-[42px]  border-grey-200  justify-between items-center inline-flex">
+      <div className="h-[68px]  border-grey-200  justify-between items-center inline-flex">
         <div className="justify-start items-start gap-5 flex">
           <div className="h-9 w-64 px-2 py-1.5 rounded border border-gray-300 justify-start items-center gap-1.5 flex">
             <div className="w-5 h-5 relative">
@@ -20,7 +20,7 @@ export const Filters = () => {
               <input
                 type="text"
                 placeholder="Search Particular"
-                className="outline:none focus:outline-none focus:ring-0"
+                className="text-gray-500 text-sm font-normal font-inter leading-none outline:none focus:outline-none focus:ring-0"
               />
             </div>
           </div>
@@ -30,7 +30,7 @@ export const Filters = () => {
                 <div className="w-[18px] h-[18px] relative">
                   <img src={filterFunnel} />
                 </div>
-                <div className="text-gray-500 text-xs font-normal font-['Inter'] leading-none">
+                <div className="text-gray-500 text-sm font-normal font-inter leading-none">
                   Filter by assigned
                 </div>
               </div>
@@ -43,7 +43,7 @@ export const Filters = () => {
                 <div className="w-5 h-5 relative">
                   <img src={calender} />
                 </div>
-                <div className="text-gray-500 text-xs font-normal font-['Inter'] leading-none">
+                <div className="text-gray-500 text-sm font-normal font-inter leading-none">
                   Date
                 </div>
               </div>
@@ -56,7 +56,7 @@ export const Filters = () => {
                 <div className="w-5 h-5 relative">
                   <img src={check} />
                 </div>
-                <div className="text-gray-500 text-xs font-normal font-['Inter'] leading-none">
+                <div className="text-gray-500 text-sm font-normal font-'lnter' leading-none">
                   Status
                 </div>
               </div>
@@ -98,6 +98,7 @@ export const Filters = () => {
           </div>
         </div>
       </div>
+      <div className="border-b-2 border-violet-100 w-full -mt-[4px]"></div>
     </>
   );
 };

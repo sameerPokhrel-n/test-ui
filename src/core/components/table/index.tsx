@@ -6,15 +6,27 @@ import {
   getFilteredRowModel,
   flexRender,
   RowData,
+  ColumnFiltersState,
+  FilterFn,
+  //   FilterFns,
 } from "@tanstack/react-table";
+import {
+  //   RankingInfo,
+  rankItem,
+  //   compareItems,
+} from "@tanstack/match-sorter-utils";
 import { FaSortDown, FaSortUp } from "react-icons/fa";
 import { dotsVertical, sortUpDown } from "@/assets/images";
 import { IoIosAdd } from "react-icons/io";
 import { slugToTitle } from "@/core/helpers/string";
+// import { DebouncedInput } from "../inputs";
 
 declare module "@tanstack/react-table" {
   interface TableMeta<TData extends RowData> {
     updateData: (rowIndex: number, columnId: string, value: unknown) => void;
+  }
+  interface FilterFns {
+    fuzzy: FilterFn<unknown>;
   }
 }
 
@@ -54,6 +66,19 @@ const defaultColumn: Partial<ColumnDef<any>> = {
   },
 };
 
+const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
+  // Rank the item
+  const itemRank = rankItem(row.getValue(columnId), value);
+
+  // Store the itemRank info
+  addMeta({
+    itemRank,
+  });
+
+  // Return if the item should be filtered in/out
+  return itemRank.passed;
+};
+
 export const Table = <T extends object>({
   rows,
   defaultColumns,
@@ -65,6 +90,8 @@ export const Table = <T extends object>({
   const tableRef = useRef();
   const [data, setData] = useState(() => [...rows]);
   const [columnVisibility, setColumnVisibility] = useState({});
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [globalFilter, setGlobalFilter] = useState("");
   const [rowSelection, setRowSelection] = useState({ 0: true });
   const [isOpen, setIsOpen] = useState({ headerID: "", showDropWown: false });
   const [showHiddenColumn, setShowHiddenColumns] = useState(false);
@@ -112,13 +139,21 @@ export const Table = <T extends object>({
     columns,
     defaultColumn,
     getCoreRowModel: getCoreRowModel(),
+    filterFns: {
+      fuzzy: fuzzyFilter,
+    },
     state: {
       columnVisibility,
       rowSelection,
+      columnFilters,
+      globalFilter,
     },
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     getFilteredRowModel: getFilteredRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    onGlobalFilterChange: setGlobalFilter,
+    globalFilterFn: fuzzyFilter,
     meta: {
       updateData: (rowIndex, columnId, value) => {
         setData((old) =>
@@ -147,6 +182,12 @@ export const Table = <T extends object>({
 
   return (
     <div className="flex flex-col h-[50vh]">
+      {/* <DebouncedInput
+        value={globalFilter ?? ""}
+        onChange={(value) => setGlobalFilter(String(value))}
+        className="p-2 font-lg shadow border border-block outline:none focus:outline-none focus:ring-0"
+        placeholder="Search all columns..."
+      /> */}
       <div className="overflow-auto custom-scrollbar sm:-mx-6 lg:-mx-8">
         <div className="inline-block min-w-full py-4 sm:px-6 lg:px-8">
           <div className="overflow-visible">
@@ -178,7 +219,7 @@ export const Table = <T extends object>({
                               header.id !== "rowSelection"
                                 ? "gap-1"
                                 : "justify-center"
-                            } text-slate-700 leading-none font-inter font-bold items-center place-items-center`}
+                            } text-slate-700 leading-none font-inter font-semibold items-center place-items-center`}
                           >
                             {header.id === "addColumn" && (
                               <div

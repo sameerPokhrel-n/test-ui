@@ -4,16 +4,16 @@ import { Fragment } from "react";
 
 export default function Header() {
   return (
-    <header className="flex gap-6 mb-[0.35rem] h-[60px]">
-      <div className={` bg-white w-screen  duration-250  px-4`}>
-        <div className="flex flex-row justify-between place-items-center p-4">
+    <header className=" bg-white gap-6 place-items-center mb-[0.35rem] p-[30px] items-center h-[72px] inline-flex ">
+      <div className={` w-screen   duration-250  `}>
+        <div className="flex flex-row justify-between items-center">
           <div className="flex  flex-row gap-4 place-items-start items-center">
             <img src={headerIcon} />
             <h1 className="font-inter text-gray-900 text-xl font-semibold leading-7">
               Test Project
             </h1>
           </div>
-          <div className="flex flex-row place-items-center items-center gap-8">
+          <div className="flex flex-row  items-center gap-8">
             {headerItems.map((el, id) => {
               if (el.name === "bell") {
                 return (

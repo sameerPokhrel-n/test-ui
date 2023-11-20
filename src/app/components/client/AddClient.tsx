@@ -208,7 +208,7 @@ export const AddClient = () => {
   };
   return (
     <>
-      <div className="h-14 py-6 w-[calc(100vw-240px)]  justify-between items-center inline-flex">
+      <div className="h-14 py-3 w-[calc(100vw-240px)]  justify-between items-center inline-flex">
         <div className="px-3 cursor-pointer py-2 bg-primaryBlue rounded justify-start items-center gap-1.5 flex">
           <button
             onClick={showModal}
@@ -222,17 +222,17 @@ export const AddClient = () => {
         </div>
         <div className="justify-center items-center flex mr-9">
           <div className="px-3 py-1 justify-center items-center gap-2.5 flex">
-            <div className="text-slate-700 text-xs font-normal font-inter leading-none">
+            <div className="text-slate-700 text-sm font-normal font-inter leading-none">
               Prospects(18)
             </div>
           </div>
           <div className="px-3 py-1 border-b border-green justify-center items-center gap-2.5 flex">
-            <div className="text-slate-700 text-xs font-normal font-inter leading-none">
+            <div className="text-slate-700 text-sm font-normal font-inter leading-none">
               Clients(10)
             </div>
           </div>
           <div className="px-3 py-1 justify-center items-center gap-2.5 flex">
-            <div className="text-slate-700 text-xs font-normal font-inter leading-none">
+            <div className="text-slate-700 text-sm font-normal font-inter leading-none">
               Archived(0)
             </div>
           </div>
