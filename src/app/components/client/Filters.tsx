@@ -1,6 +1,7 @@
 import {
   calender,
   check,
+  filterDivider,
   filterFunnel,
   headerCheveronDown,
   searchIcon,
@@ -9,8 +10,8 @@ import {
 
 export const Filters = () => {
   return (
-    <>
-      <div className="h-[68px]  border-grey-200  justify-between items-center inline-flex">
+    <div className="flex flex-col divide-y">
+      <div className="h-[68px]  mb-1   border-grey-200  justify-between items-center inline-flex">
         <div className="justify-start items-start gap-5 flex">
           <div className="h-9 w-64 px-2 py-1.5 rounded border border-gray-300 justify-start items-center gap-1.5 flex">
             <div className="w-5 h-5 relative">
@@ -67,28 +68,34 @@ export const Filters = () => {
           </div>
         </div>
         <div className="justify-start items-center gap-9 flex cursor-pointer">
-          <div className="justify-start items-center gap-5 flex">
-            <div className="justify-start items-center gap-1.5 flex">
-              <div className="w-[18px] h-[18px] relative">
+          <div className="justify-start items-center gap-5 flex px-10">
+            <div className=" items-center gap-1.5 flex  justify-between">
+              <div className="w-[18px] h-[18px] relative ">
                 <img src={filterFunnel} />
               </div>
-              <div className="text-gray-500 text-xs font-normal font-['Inter'] leading-none">
+              <div className="text-gray-500 text-sm font-normal font-inter leading-none">
                 Filter
+              </div>
+              <div className="pl-2">
+                <img src={filterDivider} />
               </div>
             </div>
             <div className="justify-start items-center gap-1.5 flex">
               <div className="w-5 h-5 relative">
                 <img src={sortUpDown} />
               </div>
-              <div className="text-gray-500 text-xs font-normal font-['Inter'] leading-none">
+              <div className="text-gray-500 text-sm font-normal font-inter leading-none">
                 Sort
+              </div>
+              <div className="pl-2">
+                <img src={filterDivider} />
               </div>
             </div>
             <div className="justify-start items-center gap-1.5 flex">
               <div className="w-[18px] h-[18px] relative">
                 <img src={filterFunnel} />
               </div>
-              <div className="text-gray-500 text-xs font-normal font-['Inter'] leading-none">
+              <div className="text-gray-500 text-sm font-normal font-inter leading-none">
                 Saved Filter
               </div>
             </div>
@@ -98,7 +105,7 @@ export const Filters = () => {
           </div>
         </div>
       </div>
-      <div className="border-b-2 border-violet-100 w-full -mt-[4px]"></div>
-    </>
+      <div></div>
+    </div>
   );
 };

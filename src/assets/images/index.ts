@@ -4,6 +4,7 @@ import headerBell from "./bell-02.png";
 import headerMessage from "./mail-01.png";
 import headerSetting from "./settings-02.png";
 import headerDivider from "./divider.png";
+import filterDivider from "./dividerFilter.png";
 import headerMoon from "./moon.png";
 import headerImage from "./client.png";
 import headerCheveronDown from "./chevron-down.png";
@@ -52,4 +53,5 @@ export {
   filterFunnel,
   calender,
   check,
+  filterDivider,
 };

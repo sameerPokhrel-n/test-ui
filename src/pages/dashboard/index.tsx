@@ -4,7 +4,7 @@ import { ClientTable } from "@/app/components/table/ClientTable";
 
 export const Dashboard = () => {
   return (
-    <div className="flex flex-col border-b-2 border-violet-50 gap-2 px-6">
+    <div className="flex flex-col  gap-2 px-6">
       <Filters />
       <AddClient />
       <ClientTable />
