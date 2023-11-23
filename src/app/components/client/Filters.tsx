@@ -21,7 +21,7 @@ export const Filters = () => {
               <input
                 type="text"
                 placeholder="Search Particular"
-                className="text-gray-500 text-sm font-normal font-inter leading-none outline:none focus:outline-none focus:ring-0"
+                className=" Input text-gray-500 text-sm font-normal font-inter leading-none outline:none focus:outline-none focus:ring-0"
               />
             </div>
           </div>

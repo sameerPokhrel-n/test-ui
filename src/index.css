@@ -21,8 +21,15 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 }
-input {
+.Input {
   @apply px-1 py-1 text-sm outline-none bg-white  focus:outline-none focus:outline-secondary focus:ring-2 focus:ring-offset-2 border-0 border-transparent  border-secondaryDim transition ease-in-out duration-300 rounded-[5px];
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
 }
 
 .custom-scrollbar {

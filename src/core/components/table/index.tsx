@@ -8,13 +8,8 @@ import {
   RowData,
   ColumnFiltersState,
   FilterFn,
-  //   FilterFns,
 } from "@tanstack/react-table";
-import {
-  //   RankingInfo,
-  rankItem,
-  //   compareItems,
-} from "@tanstack/match-sorter-utils";
+import { rankItem } from "@tanstack/match-sorter-utils";
 import { FaSortDown, FaSortUp } from "react-icons/fa";
 import { dotsVertical, sortUpDown } from "@/assets/images";
 import { IoIosAdd } from "react-icons/io";
@@ -61,6 +56,7 @@ const defaultColumn: Partial<ColumnDef<any>> = {
         onChange={(e) => setValue(e.target.value)}
         onBlur={onBlur}
         type="text"
+        className="Input"
       />
     );
   },
@@ -200,7 +196,7 @@ export const Table = <T extends object>({
                   <tr key={headerGroup.id}>
                     {headerGroup.headers.map((header) => (
                       <th
-                        className={`bg-white  font-bold py-4 whitespace-nowrap select-none align-middle text-left border ${
+                        className={`bg-white    font-bold py-4 whitespace-nowrap select-none align-middle text-left border ${
                           header.column.columnDef.headerClassName
                             ? header.column.columnDef.headerClassName
                             : ""
