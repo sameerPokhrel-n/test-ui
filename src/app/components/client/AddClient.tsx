@@ -371,11 +371,11 @@ export const AddClient = () => {
   return (
     <>
       <div className="h-14 py-3 w-[calc(100vw-240px)]  justify-between items-center inline-flex">
-        <div className="px-3 cursor-pointer py-2 bg-primaryBlue rounded justify-start items-center gap-1.5 flex">
-          <button
-            onClick={showModal}
-            className=" text-white whitespace-nowrap text-xs font-medium font-inter leading-none "
-          >
+        <div
+          onClick={showModal}
+          className="px-3 cursor-pointer py-2 bg-primaryBlue rounded justify-start items-center gap-1.5 flex"
+        >
+          <button className=" text-white whitespace-nowrap text-xs font-medium font-inter leading-none ">
             New Client
           </button>
           <div className="w-5 h-5 relative">
@@ -411,22 +411,24 @@ export const AddClient = () => {
         <ModalContent className="text-sm text-center">
           <form autoComplete="off" onSubmit={handleSubmit(onFormSubmit)}>
             <ClientForm register={register} errors={errors} control={control} />
-            <ModalFooter className="">
-              <div className="flex gap-4 items-center justify-end">
-                <button
-                  onClick={hideModal}
-                  className="px-4 py-1.5 bg-lightBlue hover:bg-blue-400 text-white rounded-md "
-                >
-                  Cancel
-                </button>
-                <button
-                  className="px-4 py-1.5 bg-secondary text-white rounded-md hover:bg-violet-300"
-                  type="submit"
-                >
-                  Save
-                </button>
-              </div>
-            </ModalFooter>
+            <div className="">
+              <ModalFooter className="">
+                <div className="flex  gap-4 items-center justify-end">
+                  <button
+                    onClick={hideModal}
+                    className="px-4 py-1.5 bg-lightBlue hover:bg-blue-400 text-white rounded-md "
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="px-4 py-1.5 bg-secondary text-white rounded-md hover:bg-violet-400"
+                    type="submit"
+                  >
+                    Save
+                  </button>
+                </div>
+              </ModalFooter>
+            </div>
           </form>
         </ModalContent>
       </Modal>

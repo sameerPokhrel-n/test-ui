@@ -50,6 +50,7 @@ const defaultColumn: Partial<ColumnDef<any>> = {
       setValue(initialValue);
     }, [initialValue]);
 
+    if (id === "addColumn") return;
     return (
       <input
         value={value as string}
@@ -233,7 +234,7 @@ export const Table = <T extends object>({
                                   <div>
                                     <div
                                       ref={tableRef}
-                                      className={`z-[1000]  absolute
+                                      className={`z-[1000]  absolute right-0 top-10
 
                                          bg-white p-2 divide-y divide-gray-100 rounded-lg shadow w-44 `}
                                     >
