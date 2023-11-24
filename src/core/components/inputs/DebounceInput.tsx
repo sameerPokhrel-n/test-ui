@@ -1,4 +1,5 @@
 import React from "react";
+import { MdCancel } from "react-icons/md";
 
 type Props = {
   value: string | number;
@@ -26,7 +27,18 @@ export const DebouncedInput: React.FC<Props> = ({
     }, debounce);
     return () => clearTimeout(timeout);
   }, [value]);
-  return <input {...props} value={value} onChange={handleInputChange} />;
+  return (
+    <div className="relative">
+      <input {...props} value={value} onChange={handleInputChange} />
+      {value !== "" && (
+        <div className="absolute inset-y-0 -right-1 flex items-center pr-3">
+          <button type="button" onClick={() => setValue("")}>
+            <MdCancel className="h-4 w-4 " />
+          </button>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default DebouncedInput;

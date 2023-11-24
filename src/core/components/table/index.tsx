@@ -2,6 +2,7 @@ import { useRef, useState, useEffect, HTMLProps } from "react";
 import {
   ColumnDef,
   useReactTable,
+  getSortedRowModel,
   getCoreRowModel,
   getFilteredRowModel,
   flexRender,
@@ -10,11 +11,11 @@ import {
   FilterFn,
 } from "@tanstack/react-table";
 import { rankItem } from "@tanstack/match-sorter-utils";
-import { FaSortDown, FaSortUp } from "react-icons/fa";
-import { dotsVertical, sortUpDown } from "@/assets/images";
+import { FaRegEyeSlash, FaSort, FaSortDown, FaSortUp } from "react-icons/fa";
+import { dotsVertical } from "@/assets/images";
 import { IoIosAdd } from "react-icons/io";
 import { slugToTitle } from "@/core/helpers/string";
-// import { DebouncedInput } from "../inputs";
+import { useClient } from "@/app/context/client/Provider";
 
 declare module "@tanstack/react-table" {
   interface TableMeta<TData extends RowData> {
@@ -88,7 +89,7 @@ export const Table = <T extends object>({
   const [data, setData] = useState(() => [...rows]);
   const [columnVisibility, setColumnVisibility] = useState({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [globalFilter, setGlobalFilter] = useState("");
+  const { globalFilter, setGlobalFilter } = useClient();
   const [rowSelection, setRowSelection] = useState({ 0: true });
   const [isOpen, setIsOpen] = useState({ headerID: "", showDropWown: false });
   const [showHiddenColumn, setShowHiddenColumns] = useState(false);
@@ -136,6 +137,7 @@ export const Table = <T extends object>({
     columns,
     defaultColumn,
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
     filterFns: {
       fuzzy: fuzzyFilter,
     },
@@ -179,12 +181,6 @@ export const Table = <T extends object>({
 
   return (
     <div className="flex flex-col h-[50vh]">
-      {/* <DebouncedInput
-        value={globalFilter ?? ""}
-        onChange={(value) => setGlobalFilter(String(value))}
-        className="p-2 font-lg shadow border border-block outline:none focus:outline-none focus:ring-0"
-        placeholder="Search all columns..."
-      /> */}
       <div className="overflow-auto custom-scrollbar sm:-mx-6 lg:-mx-8">
         <div className="inline-block min-w-full py-4 sm:px-6 lg:px-8">
           <div className="overflow-visible">
@@ -197,11 +193,7 @@ export const Table = <T extends object>({
                   <tr key={headerGroup.id}>
                     {headerGroup.headers.map((header) => (
                       <th
-                        className={`bg-white    font-bold py-4 whitespace-nowrap select-none align-middle text-left border ${
-                          header.column.columnDef.headerClassName
-                            ? header.column.columnDef.headerClassName
-                            : ""
-                        }`}
+                        className={`bg-white font-bold py-4 whitespace-nowrap select-none align-middle text-left border`}
                         key={header.id}
                         style={{
                           width: header.getSize(),
@@ -315,7 +307,7 @@ export const Table = <T extends object>({
                                   ),
                                 }[header.column.getIsSorted() as string] ??
                                   (header.column.getCanSort() ? (
-                                    <img src={sortUpDown} width={15} />
+                                    <FaSort className="text-gray-400 h-4 w-4" />
                                   ) : null)}
                               </button>
                             ) : null}
@@ -342,22 +334,25 @@ export const Table = <T extends object>({
                                   isOpen.headerID === header.id && (
                                     <div ref={tableRef}>
                                       <div
-                                        className={`z-[1000]  absolute 
+                                        className={`z-50 absolute 
                                         
                                          bg-white p-2 divide-y divide-gray-100 rounded-lg shadow w-44 `}
                                       >
                                         <div className="py-2 flex flex-col  gap-2 text-sm text-gray-700 ">
                                           <div className="ml-2 flex gap-2  items-center">
-                                            <input
-                                              className="appearance-none myCheckbox cursor-pointer w-5 h-5 p-[3px] rounded-md border-2 default:ring-2 ring-indigo-400 checked:bg-indigo-500   focus:none"
-                                              {...{
-                                                type: "checkbox",
-                                                checked:
-                                                  header.column.getIsVisible(),
-                                                onChange:
-                                                  header.column.getToggleVisibilityHandler(),
-                                              }}
-                                            />
+                                            <label>
+                                              <input
+                                                className="hidden"
+                                                {...{
+                                                  type: "checkbox",
+                                                  checked:
+                                                    header.column.getIsVisible(),
+                                                  onChange:
+                                                    header.column.getToggleVisibilityHandler(),
+                                                }}
+                                              />
+                                              <FaRegEyeSlash className="w-5 h-5 cursor-pointer" />
+                                            </label>
                                             Hide Column
                                           </div>
                                         </div>

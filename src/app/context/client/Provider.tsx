@@ -1,5 +1,11 @@
 import { Client } from "@/app/data/makeData";
-import { ReactNode, createContext, useContext, useReducer } from "react";
+import {
+  ReactNode,
+  createContext,
+  useContext,
+  useReducer,
+  useState,
+} from "react";
 import { Action, ActionType, ClientReducer } from "./reducer";
 import { DefaultClientContext } from "./domain";
 
@@ -7,6 +13,8 @@ export const ClientContext = createContext(DefaultClientContext);
 
 export const Provider = ({ children }: { children?: ReactNode }) => {
   const initialState = DefaultClientContext.clientInitialState;
+  const [globalFilter, setGlobalFilter] = useState<string>("");
+
   const [clientInitialState, dispatch] = useReducer<
     React.Reducer<Client[], Action>
   >(ClientReducer, initialState);
@@ -23,6 +31,8 @@ export const Provider = ({ children }: { children?: ReactNode }) => {
       value={{
         clientInitialState,
         addClient,
+        globalFilter,
+        setGlobalFilter,
       }}
     >
       {children}

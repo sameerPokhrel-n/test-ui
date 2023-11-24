@@ -336,7 +336,6 @@ export const AddClient = () => {
     control,
     formState: { errors },
   } = useForm<Client>();
-  console.log(errors, "errors");
 
   const { addClient } = useClient();
   const [isModalOpen, setIsModalOpen] = useState(false);
