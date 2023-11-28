@@ -11,11 +11,11 @@ import {
   FilterFn,
 } from "@tanstack/react-table";
 import { rankItem } from "@tanstack/match-sorter-utils";
-import { FaRegEyeSlash, FaSort, FaSortDown, FaSortUp } from "react-icons/fa";
+import { FaSort, FaSortDown, FaSortUp } from "react-icons/fa";
 import { dotsVertical } from "@/assets/images";
 import { IoIosAdd } from "react-icons/io";
-import { slugToTitle } from "@/core/helpers/string";
 import { useClient } from "@/app/context/client/Provider";
+import { DropDown } from "../dropdown";
 
 declare module "@tanstack/react-table" {
   interface TableMeta<TData extends RowData> {
@@ -85,13 +85,12 @@ export const Table = <T extends object>({
   sortable = true,
   rowSelectableWithCheckbox = false,
 }: ReactTableProps<T>) => {
-  const tableRef = useRef();
   const [data, setData] = useState(() => [...rows]);
   const [columnVisibility, setColumnVisibility] = useState({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const { globalFilter, setGlobalFilter } = useClient();
   const [rowSelection, setRowSelection] = useState({ 0: true });
-  const [isOpen, setIsOpen] = useState({ headerID: "", showDropWown: false });
+  const [isOpen, setIsOpen] = useState({ headerID: "", showDropDown: false });
   const [showHiddenColumn, setShowHiddenColumns] = useState(false);
 
   useEffect(() => {
@@ -170,24 +169,22 @@ export const Table = <T extends object>({
     },
   });
 
-  const checkOutsideAndCloseDropDown = (e) => {
-    if (tableRef.current.contains(e.target)) return;
-    setIsOpen({
-      showDropWown: false,
-      headerID: "",
-    });
-    setShowHiddenColumns(false);
-  };
+  //hiddenColumns
+  const hiddenColumns = Object.values(columnVisibility).includes(false)
+    ? table
+        .getAllLeafColumns()
+        .filter(
+          (el) =>
+            Object.keys(columnVisibility).includes(el.id) && !el.getIsVisible()
+        )
+    : [];
 
   return (
     <div className="flex flex-col h-[50vh]">
       <div className="overflow-auto custom-scrollbar sm:-mx-6 lg:-mx-8">
         <div className="inline-block min-w-full py-4 sm:px-6 lg:px-8">
           <div className="overflow-visible">
-            <table
-              className="min-w-full text-center border"
-              onClick={checkOutsideAndCloseDropDown}
-            >
+            <table className="min-w-full text-center border">
               <thead className="border-b bg-white sticky top-0">
                 {table.getHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id}>
@@ -211,70 +208,21 @@ export const Table = <T extends object>({
                             } text-slate-700 leading-none font-inter font-semibold items-center place-items-center`}
                           >
                             {header.id === "addColumn" && (
-                              <div
-                                className="flex items-center gap-2 cursor-pointer"
-                                onClick={() => {
-                                  setShowHiddenColumns(!showHiddenColumn);
-                                  setIsOpen({
-                                    showDropWown: false,
-                                    headerID: "",
-                                  });
-                                }}
-                              >
-                                <IoIosAdd />
+                              <div className="flex items-center gap-2 cursor-pointer relative group">
+                                <IoIosAdd
+                                  onMouseOver={() => {
+                                    setShowHiddenColumns(!showHiddenColumn);
+                                  }}
+                                />
                                 {showHiddenColumn && (
-                                  <div>
-                                    <div
-                                      ref={tableRef}
-                                      className={`z-[1000]  absolute right-0 top-10
-
-                                         bg-white p-2 divide-y divide-gray-100 rounded-lg shadow w-44 `}
-                                    >
-                                      <div className="py-2 flex flex-col  gap-2 text-sm text-gray-700 ">
-                                        <div className="ml-2 flex  items-center">
-                                          <ul className="flex-1 flex flex-col gap-2 justify-center">
-                                            {Object.values(
-                                              columnVisibility
-                                            ).includes(false) ? (
-                                              table
-                                                .getAllLeafColumns()
-                                                .filter(
-                                                  (el) =>
-                                                    Object.keys(
-                                                      columnVisibility
-                                                    ).includes(el.id) &&
-                                                    !el.getIsVisible()
-                                                )
-                                                .map((column) => {
-                                                  return (
-                                                    <div
-                                                      key={column.id}
-                                                      className="px-1 flex items-center gap-2"
-                                                    >
-                                                      <input
-                                                        className="appearance-none myCheckbox cursor-pointer w-5 h-5 p-[3px] rounded-md border-2 default:ring-2 ring-indigo-400 focus:none"
-                                                        {...{
-                                                          type: "checkbox",
-                                                          checked:
-                                                            column.getIsVisible(),
-                                                          onChange:
-                                                            column.getToggleVisibilityHandler(),
-                                                        }}
-                                                      />{" "}
-                                                      {slugToTitle(column.id)}
-                                                    </div>
-                                                  );
-                                                })
-                                            ) : (
-                                              <h3 className="text-center text-md">
-                                                No Hidden Columns
-                                              </h3>
-                                            )}
-                                          </ul>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
+                                  <DropDown
+                                    className="opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform top-4 -left-4"
+                                    options={hiddenColumns}
+                                    onSelect={(
+                                      option: (typeof hiddenColumns)[0]
+                                    ) => console.log(option)}
+                                    optionWithCheckBox={true}
+                                  />
                                 )}
                               </div>
                             )}
@@ -316,50 +264,30 @@ export const Table = <T extends object>({
                           {!["rowSelection", "addColumn"].includes(
                             header.id
                           ) && (
-                            <div className="px-1">
-                              <>
-                                <img
-                                  className="cursor-pointer"
-                                  src={dotsVertical}
-                                  onClick={() =>
-                                    setIsOpen((prevState) => ({
-                                      ...prevState,
-                                      showDropWown: true,
-                                      headerID: header.id,
-                                    }))
-                                  }
-                                />
+                            <div className="px-1 relative group">
+                              <img
+                                className="cursor-pointer"
+                                src={dotsVertical}
+                                onMouseOver={() =>
+                                  setIsOpen((prevState) => ({
+                                    ...prevState,
+                                    showDropDown: true,
+                                    headerID: header.id,
+                                  }))
+                                }
+                              />
 
-                                {isOpen.showDropWown &&
-                                  isOpen.headerID === header.id && (
-                                    <div ref={tableRef}>
-                                      <div
-                                        className={`z-50 absolute 
-                                        
-                                         bg-white p-2 divide-y divide-gray-100 rounded-lg shadow w-44 `}
-                                      >
-                                        <div className="py-2 flex flex-col  gap-2 text-sm text-gray-700 ">
-                                          <div className="ml-2 flex gap-2  items-center">
-                                            <label>
-                                              <input
-                                                className="hidden"
-                                                {...{
-                                                  type: "checkbox",
-                                                  checked:
-                                                    header.column.getIsVisible(),
-                                                  onChange:
-                                                    header.column.getToggleVisibilityHandler(),
-                                                }}
-                                              />
-                                              <FaRegEyeSlash className="w-5 h-5 cursor-pointer" />
-                                            </label>
-                                            Hide Column
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  )}
-                              </>
+                              {isOpen.showDropDown &&
+                                isOpen.headerID === header.id && (
+                                  <DropDown
+                                    className="opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform"
+                                    options={[
+                                      { ...header.column, id: "Hide Column" },
+                                    ]}
+                                    onSelect={(option) => {}}
+                                    optionWithHiddenBox={true}
+                                  />
+                                )}
                             </div>
                           )}
                         </div>

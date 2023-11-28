@@ -8,51 +8,69 @@ import {
   searchIcon,
   sortUpDown,
 } from "@/assets/images";
-import { DropDown } from "@/core/components/dropdown";
 import { DebouncedInput } from "@/core/components/inputs";
 import { useState, useEffect } from "react";
+import Select, { components } from "react-select";
 
 export const Filters = () => {
   const { globalFilter, setGlobalFilter, clientInitialState } = useClient();
-  //   const [isDropDownVisible, setIsDropdownVisible] = useState(false);
-  const [isDropDownVisible, setIsDropdownVisible] = useState({
-    key: "",
-    status: false,
+
+  const [selectedDropdownList, setSelectedDropdownList] = useState({
+    byAssignee: "",
+    byStatus: "",
+    byDate: "",
   });
-  const [selectedDropdownList, setSelectedDropdownList] = useState("");
-  const assigneeList = clientInitialState.map((el, id) => ({
-    id: id,
-    name: el.name,
+  const assigneeList = clientInitialState.map((el) => ({
+    label: el.name,
+    value: el.name,
   }));
 
   const filternSortAssigneeList = assigneeList
     .filter(
-      (el, id) => assigneeList.findIndex((en) => en.name === el.name) === id
+      (el, id) => assigneeList.findIndex((en) => en.value === el.value) === id
     )
-    .sort((a, b) => (b.name > a.name ? -1 : 1));
+    .sort((a, b) => (b.value > a.value ? -1 : 1));
 
   const dateList = clientInitialState.map((el, id) => ({
-    id: id,
-    name: el.last_updated,
+    label: el.last_updated,
+    value: el.last_updated,
   }));
 
   const filternSortDateList = dateList
-    .filter((el, id) => dateList.findIndex((en) => en.name === el.name) === id)
-    .sort((a, b) => new Date(a.name) - new Date(b.name));
-  const statusList = clientInitialState.map((el, id) => ({
-    id: id,
-    name: el.status,
+    .filter(
+      (el, id) => dateList.findIndex((en) => en.value === el.value) === id
+    )
+    .sort((a, b) => new Date(a.value) - new Date(b.value));
+  const statusList = clientInitialState.map((el) => ({
+    label: el.status,
+    value: el.status,
   }));
   const filternSortStatusList = statusList.filter(
-    (el, id) => statusList.findIndex((en) => en.name === el.name) === id
+    (el, id) => statusList.findIndex((en) => en.value === el.value) === id
   );
 
   useEffect(() => {
-    if (selectedDropdownList !== "") {
-      setGlobalFilter(String(selectedDropdownList));
-      setIsDropdownVisible({ key: "", status: false });
+    if (Object.values(selectedDropdownList).some((el) => el !== "")) {
+      setGlobalFilter(
+        String(
+          selectedDropdownList.byAssignee ||
+            selectedDropdownList.byDate ||
+            selectedDropdownList?.byStatus ||
+            ""
+        )
+      );
     }
   }, [selectedDropdownList]);
+
+  const DropdownIndicator = (props) => {
+    return (
+      components.DropdownIndicator && (
+        <components.DropdownIndicator {...props}>
+          <img src={headerCheveronDown} />
+        </components.DropdownIndicator>
+      )
+    );
+  };
 
   return (
     <div className="flex flex-col divide-y">
@@ -72,88 +90,121 @@ export const Filters = () => {
             </div>
           </div>
           <div className="justify-start items-start gap-5 flex cursor-pointer">
-            <div
-              onClick={() =>
-                setIsDropdownVisible({ key: "filterByAssignee", status: true })
-              }
-              className="px-2 py-1.5 rounded border border-gray-300 justify-start items-center gap-2 flex"
-            >
-              <div className="justify-start items-center gap-1.5 flex">
-                <div className="w-[18px] h-[18px] relative">
-                  <img src={filterFunnel} />
-                </div>
-                <div className="text-gray-500 text-sm font-normal font-inter leading-none">
-                  Filter by assigned
-                </div>
-              </div>
-              <div className="w-5 h-5 relative">
-                <img src={headerCheveronDown} />
-              </div>
-            </div>
-            {isDropDownVisible.status &&
-              isDropDownVisible.key === "filterByAssignee" && (
-                <DropDown
-                  className="w-56 top-52 h-96"
-                  data={filternSortAssigneeList}
-                  setSelectedDropdownList={setSelectedDropdownList}
-                />
-              )}
-
-            <div
-              className="px-2 py-1.5 rounded border border-gray-300 justify-start items-center gap-2 flex"
-              onClick={() =>
-                setIsDropdownVisible({ key: "filterByDate", status: true })
-              }
-            >
-              <div className="justify-start items-center gap-1.5 flex">
-                <div className="w-5 h-5 relative">
-                  <img src={calender} />
-                </div>
-                <div className="text-gray-500 text-sm font-normal font-inter leading-none">
-                  Date
-                </div>
-              </div>
-              <div className="w-5 h-5 relative">
-                <img src={headerCheveronDown} />
-              </div>
-            </div>
-            {isDropDownVisible.status &&
-              isDropDownVisible.key === "filterByDate" && (
-                <DropDown
-                  className="w-32 top-52 left-[46rem] h-96"
-                  data={filternSortDateList}
-                  //   data={dateList}
-                  setSelectedDropdownList={setSelectedDropdownList}
-                />
-              )}
-
-            <div
-              className="px-2 py-1.5 rounded border border-gray-300 justify-start items-center gap-2 flex"
-              onClick={() =>
-                setIsDropdownVisible({ key: "filterByStatus", status: true })
-              }
-            >
-              <div className="justify-start items-center gap-1.5 flex">
-                <div className="w-5 h-5 relative">
-                  <img src={check} />
-                </div>
-                <div className="text-gray-500 text-sm font-normal font-'lnter' leading-none">
-                  Status
-                </div>
-              </div>
-              <div className="w-5 h-5 relative">
-                <img src={headerCheveronDown} />
-              </div>
+            <div className="-top-[5px] relative">
+              <Select
+                className="text-sm  w-[189px] "
+                classNamePrefix={"rselect"}
+                placeholder={
+                  <div className="justify-start items-center gap-1.5 flex">
+                    <img src={filterFunnel} />
+                    <div className="whitespace-nowrap">Filter by assigned</div>
+                  </div>
+                }
+                styles={{
+                  control: (baseStyles, state) => ({
+                    ...baseStyles,
+                    borderColor: state.isFocused ? "#7474C9 !important" : "",
+                    boxShadow: state.isFocused
+                      ? "0 0 0 1px #7474C9 !important "
+                      : "",
+                    height: "2.5rem",
+                    marginTop: "0.25rem",
+                  }),
+                }}
+                value={
+                  filternSortAssigneeList?.find(
+                    (el) => el.label === selectedDropdownList.byAssignee
+                  ) ?? ""
+                }
+                isClearable={true}
+                options={filternSortAssigneeList}
+                onChange={(selectedOption) => {
+                  setSelectedDropdownList({
+                    byAssignee: selectedOption?.value,
+                    byStatus: "",
+                    byDate: "",
+                  });
+                }}
+                components={{ DropdownIndicator }}
+              />
             </div>
 
-            {isDropDownVisible.status &&
-              isDropDownVisible.key === "filterByStatus" && (
-                <DropDown
-                  className="w-36 top-52 left-[54rem] h-auto"
-                  data={filternSortStatusList}
-                  setSelectedDropdownList={setSelectedDropdownList}
-                />
-              )}
+            <div className="-top-[5px] relative">
+              <Select
+                className="text-sm  w-[105px] "
+                classNamePrefix={"rselect"}
+                placeholder={
+                  <div className="justify-start items-center gap-1.5 flex">
+                    <img src={calender} />
+                    <div className="whitespace-nowrap">Date</div>
+                  </div>
+                }
+                styles={{
+                  control: (baseStyles, state) => ({
+                    ...baseStyles,
+                    borderColor: state.isFocused ? "#7474C9 !important" : "",
+                    boxShadow: state.isFocused
+                      ? "0 0 0 1px #7474C9 !important "
+                      : "",
+                    height: "2.5rem",
+                    marginTop: "0.25rem",
+                  }),
+                }}
+                value={
+                  filternSortDateList?.find(
+                    (el) => el.label === selectedDropdownList.byDate
+                  ) ?? ""
+                }
+                isClearable={true}
+                options={filternSortDateList}
+                onChange={(selectedOption) => {
+                  setSelectedDropdownList({
+                    byAssignee: "",
+                    byStatus: "",
+                    byDate: selectedOption?.value,
+                  });
+                }}
+                components={{ DropdownIndicator }}
+              />
+            </div>
+            <div className="-top-[5px] relative">
+              <Select
+                className="text-sm  w-[117px] "
+                classNamePrefix={"rselect"}
+                placeholder={
+                  <div className="justify-start items-center gap-1.5 flex">
+                    <img src={check} />
+                    <div className="whitespace-nowrap">Status</div>
+                  </div>
+                }
+                styles={{
+                  control: (baseStyles, state) => ({
+                    ...baseStyles,
+                    borderColor: state.isFocused ? "#7474C9 !important" : "",
+                    boxShadow: state.isFocused
+                      ? "0 0 0 1px #7474C9 !important "
+                      : "",
+                    height: "2.5rem",
+                    marginTop: "0.25rem",
+                  }),
+                }}
+                value={
+                  filternSortStatusList?.find(
+                    (el) => el.label === selectedDropdownList.byStatus
+                  ) ?? ""
+                }
+                isClearable={true}
+                options={filternSortStatusList}
+                onChange={(selectedOption) => {
+                  setSelectedDropdownList({
+                    byAssignee: "",
+                    byStatus: selectedOption?.value,
+                    byDate: "",
+                  });
+                }}
+                components={{ DropdownIndicator }}
+              />
+            </div>
           </div>
         </div>
 
